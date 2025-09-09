@@ -1,7 +1,7 @@
 package main
 
 import (
-	"createJavaFile/internal/template/ypd"
+	"github.com/BryanChanCQ/generate-class/internal/template/ypd"
 	"log"
 	"os"
 	"strings"
