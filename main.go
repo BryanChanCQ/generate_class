@@ -1,33 +1,47 @@
 package main
 
 import (
-	"github.com/BryanChanCQ/generate-class/internal/template/ypd"
 	"log"
 	"os"
 	"strings"
 	"text/template"
+
+	"github.com/BryanChanCQ/generate-class/internal/template/ypd"
 )
 
 const (
 	RepositoryEnum = iota
-	QuerywrapperEnum
+	QueryWrapperEnum
 	WrapperEnum
 )
 
 var ypd_map = map[int]string{
 	RepositoryEnum:   ypd.Ypd_Repository_Template,
-	QuerywrapperEnum: ypd.Ypd_Querywrapper_Template,
+	QueryWrapperEnum: ypd.Ypd_QueryWrapper_Template,
 	WrapperEnum:      ypd.Ypd_Wrapper_Template,
 }
 
 type NameFunc = func(string) string
 
+func DefaultParam(param []string) (bool, []string) {
+	if len(param) == 1 && strings.Contains(param[0], "debug") {
+		return true, []string{param[0], "Debug"}
+	}
+	if len(param) == 1 && !strings.Contains(param[0], "debug") {
+		return false, param
+	}
+	if len(param) > 1 {
+		return true, param
+	}
+	return false, nil
+}
+
 func GetNameFunc(name int) NameFunc {
 	switch name {
 	case RepositoryEnum:
 		return ypd.GetRepository
-	case QuerywrapperEnum:
-		return ypd.GetQuerywrapper
+	case QueryWrapperEnum:
+		return ypd.GetQueryWrapper
 	case WrapperEnum:
 		return ypd.GetWrapper
 	default:
@@ -36,17 +50,16 @@ func GetNameFunc(name int) NameFunc {
 }
 func main() {
 	args := os.Args
-	if len(args) == 1 {
+	var flag bool
+	var param []string
+	if flag, param = DefaultParam(args); !flag {
 		log.Fatalf("请输入entity类名")
 	}
-	ypd_struct := &YpdStrct{}
-	funcMap := template.FuncMap{
-		"title": strings.Title, // 注册 title 函数
-	}
-	for _, className := range args[1:] {
+	ypd_struct := &YpdStruct{}
+	for _, className := range param[1:] {
 		ypd_struct.ClassName = className
 		for k, v := range ypd_map {
-			tmpl, err := template.New("111").Funcs(funcMap).Parse(v)
+			tMpl, err := template.New("111").Parse(v)
 			if err != nil {
 				panic(err)
 			}
@@ -57,7 +70,7 @@ func main() {
 			}
 			defer f.Close()
 
-			if err = tmpl.Execute(f, ypd_struct); err != nil {
+			if err = tMpl.Execute(f, ypd_struct); err != nil {
 				panic(err)
 			}
 		}
@@ -65,6 +78,6 @@ func main() {
 
 }
 
-type YpdStrct struct {
+type YpdStruct struct {
 	ClassName string
 }
