@@ -1,7 +1,15 @@
 package ypd
 
-func GetQueryWrapper(className string) string {
-    return "Query" + className + "Wrapper.java";
+import "github.com/BryanChanCQ/generate-class/internal/types"
+const YpdMainPath = "/home/bryanchancq/work_code/yonbip-zskpd/"
+const MainPath = "/zskpd-be/dev-zskpd-service/src/main/java/"
+const queryPackagePath = "com/yonyou/ucf/mdf/wrapper/query/"
+func GetQueryWrapper(os types.OperateSystem, className string) string {
+    if os == types.Linux {
+        return YpdMainPath + MainPath + queryPackagePath + "Query" + className + "Wrapper.java";
+    } else {
+        return "Query" + className + "Wrapper.java";
+    }
 }
 const Ypd_QueryWrapper_Template = `package com.yonyou.ucf.mdf.wrapper.query;
 import com.yonyou.ucf.mdf.bill.entity.{{ .ClassName }};

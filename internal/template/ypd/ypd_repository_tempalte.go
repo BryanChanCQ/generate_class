@@ -1,14 +1,16 @@
 package ypd
 
-func GetRepository(className string) string{
-    return className + "Repository.java";
+import "github.com/BryanChanCQ/generate-class/internal/types"
+
+func GetRepository(os types.OperateSystem, className string) string{
+    if os == types.Linux {
+        return  YpdMainPath + MainPath + repoPackagePath + className + "Repository.java";
+    } else {
+        return className + "Repository.java";
+    }
 }
-
+const repoPackagePath = "/com/yonyou/ucf/mdf/repository/"
 const Ypd_Repository_Template = `package com.yonyou.ucf.mdf.repository;
-import java.util.List;
-import java.util.Map;
-
-import org.imeta.orm.schema.QueryCondition;
 import org.springframework.stereotype.Repository;
 
 import com.yonyou.ucf.mdf.bill.entity.{{ .ClassName }};
@@ -20,7 +22,7 @@ import com.yonyou.ucf.mdf.wrapper.updateOrInsert.{{ .ClassName }}Wrapper;
 @Repository
 public class {{ .ClassName }}Repository extends AbsRepository<{{ .ClassName }}> {
     @Override
-	public AbsQueryWrapper queryWrapper() {
+	public AbsQueryWrapper<{{ .ClassName }}> queryWrapper() {
 		return new Query{{ .ClassName }}Wrapper();
 	}
     

@@ -3,12 +3,16 @@ package main
 import (
 	"log"
 	"os"
+	"runtime"
 	"strings"
 	"text/template"
 
 	"github.com/BryanChanCQ/generate-class/internal/template/mdd"
 	"github.com/BryanChanCQ/generate-class/internal/template/ypd"
+	"github.com/BryanChanCQ/generate-class/internal/types"
 )
+
+
 
 const (
 	RepositoryEnum = iota
@@ -30,7 +34,6 @@ var mdd_map = map[int]string{
 	WrapperEnum:      mdd.Mdd_Wrapper_Template,
 }
 
-type NameFunc = func(string) string
 
 func ConsumerFramework(param string) (map[int]string, int) {
 	switch param {
@@ -55,7 +58,7 @@ func DefaultParam(param []string) (bool, []string) {
 	return false, nil
 }
 
-func GetNameFunc(name int, framework_type int) NameFunc {
+func GetNameFunc(name int, framework_type int) types.NameFunc {
 	if framework_type == mdd_framework {
 		switch name {
 		case RepositoryEnum:
@@ -105,7 +108,7 @@ func main() {
 				panic(err)
 			}
 			// 执行模板并写入到文件
-			f, err := os.Create(GetNameFunc(k, framework_type)(className))
+			f, err := os.Create(GetNameFunc(k, framework_type)(runtime.GOOS, className))
 			if err != nil {
 				panic(err)
 			}
