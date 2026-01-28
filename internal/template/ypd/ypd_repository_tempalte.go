@@ -22,12 +22,12 @@ import com.yonyou.ucf.mdf.wrapper.updateOrInsert.{{ .ClassName }}Wrapper;
 @Repository
 public class {{ .ClassName }}Repository extends AbsRepository<{{ .ClassName }}> {
     @Override
-	public AbsQueryWrapper<{{ .ClassName }}> queryWrapper() {
+	protected AbsQueryWrapper<{{ .ClassName }}> queryWrapper() {
 		return new Query{{ .ClassName }}Wrapper();
 	}
     
     @Override
-    public AbsWrapper<{{ .ClassName }}> changeWrapper() {
+    protected AbsWrapper<{{ .ClassName }}> changeWrapper() {
         return new {{ .ClassName }}Wrapper();
     }
 }
