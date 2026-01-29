@@ -1,3 +1,10 @@
+/*
+ * 代码生成工具
+ * 用于根据模板生成Java类文件
+ * 支持YPd和MDD两种框架
+ * 作者: BryanChanCQ
+ * 日期: 2026-01-29
+ */
 package main
 
 import (
@@ -83,6 +90,9 @@ func GetNameFunc(name int, framework_type int) types.NameFunc {
 		}
 	}
 }
+// main 函数是程序的入口点
+// 解析命令行参数并根据指定的框架（YPd或MDD）生成相应的Java类文件
+// 参数格式: ./generc [framework] [entityName1] [entityName2] ...
 func main() {
 	args := os.Args
 	var flag bool
